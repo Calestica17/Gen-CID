@@ -1,0 +1,89 @@
+if Owner == "Zufar" and DiscordID == "zufar17" and DiscordServer == "https://discord.gg/vmKjg7qbz7" then
+    function GonWebhook(ZufarStore)
+        local currentTime = os.date("%H:%M:%S\n:calendar_spiral: Current Date : %d-%m-%Y\n========================================\n<a:king:1146855814510952458> Owner : <@1089862323105177600>**") -- Get current date and time
+        wh = Webhook.new(webhookCID)
+        wh.username = "Zufar Store"
+        wh.avatar_url = "https://cdn.discordapp.com/attachments/1206152488818839562/1207569741099704332/Zufar_Store.png?ex=65f294f5&is=65e01ff5&hm=847b78c28685ffdc693491b098858531609f97f259962b41533af081a0a03b77&"
+        wh.embed1.use = true
+        wh.embed1.title = "Zufar Store"
+        wh.embed1.description = ZufarStore .. "\n:alarm_clock: Time : " .. currentTime -- Add time information
+        
+        local response = wh:send() -- Send the webhook and get the response
+    end
+
+    function GenBotName(length)
+        local characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        local randomString = ""
+        for i = 1, length do
+            local randomIndex = math.random(#characters)
+            randomString = randomString .. string.sub(characters, randomIndex, randomIndex)
+        end
+        return randomString
+    end
+
+    -- LIST GROWID BOT
+    listGrowID = {}
+
+    for i = 1, #Multi_MacRid do
+        listGrowID[i] = GenBotName(NameLetter) -- Generate a random string for each MacRid
+    end
+
+
+    function checkOnline()
+        while bot.status ~= 1 do
+            bot:connect()
+			sleep(5000)
+        end
+    end
+
+    function checkAAP()
+        while bot.status ~= 6 do
+            bot:connect()
+            sleep(3000)
+        end
+    end
+
+    function LogText(text) 
+        file = io.open(LogsFile, "a") 
+        file:write(text .. "\n")
+        file:close() 
+    end
+
+    for index, bots in pairs(listGrowID) do
+        mac, rid = Multi_MacRid[index]:match("([^|]+)|([^|]+)")
+        NewBot = GenBotName(NameLetter)
+        addBot(NewBot)
+        bot = getBot(NewBot)
+        bot:setMac(mac)
+        bot:setRid(rid)
+        bot:updateBot(bots, mac, rid)
+        bot.auto_reconnect = true
+        bot.auto_tutorial = false
+        sleep(5000)
+        checkOnline()
+        Email, EmailPass = Multi_EmailAddress[index]:match("([^|]+)|([^|]+)")
+        if RandomPassword then
+            Password = generateRandomString(10)
+        else
+            Password = Custom_Password
+        end
+		checkOnline()
+        bot:sendPacket(2, "action|growid")
+        sleep(1000)
+        bot:sendPacket(2, "action|dialog_return\ndialog_name|growid_apply\nlogon|" .. bots .. "\npassword|" .. Password .. "\npassword_verify|" .. Password .. "\nemail|" .. Email)
+        sleep(5000)
+        bot:sendPacket(2, "action|growid")
+        sleep(1000)
+        bot:sendPacket(2, "action|dialog_return\ndialog_name|growid_apply\nlogon|" .. bots .. "\npassword|" .. Password .. "\npassword_verify|" .. Password .. "\nemail|" .. Email)
+        sleep(15000)
+        bot:connect()
+        bot.auto_reconnect = false
+        checkAAP()
+        sleep(1000)
+        if bot.status == BotStatus.advanced_account_protection then
+            GonWebhook("**<a:plash:1146855891681951917> CONVERT GUEST TO CID <a:plash:1146855891681951917>\n\n<:growbot:992058196439072770> Bot Name : " .. bots .. "\n<a:arrow:1146856274408001697> Password : " .. Password .. "\n<a:arrow:1146856274408001697> Email : " .. Email .. "\n<a:arrow:1146856274408001697> Email Password : " .. EmailPass .. "\n<a:loding:1146855858874089573> Status : Success Send AAP <a:alerts:1149773640024461372>")
+            LogText(bots .. "|" .. Password .. "|" .. Email .. "|" .. EmailPass)
+			removeBot()
+        end
+    end
+end
