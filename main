@@ -1,26 +1,3 @@
-local url = "https://raw.githubusercontent.com/Calestica17/Gen-CID/main/License"
-
-local curlCommand = "curl -s " .. url
-local handle = io.popen(curlCommand)
-local response = handle:read("*a")
-handle:close()
-
-if not response or response == "" then
-    print("Somthing Wrong Here")
-else
-    local isLicenseValid = false
-    for match in response:gmatch("%S+") do
-        if match == getUsername() then
-            isLicenseValid = true
-            print("Work")
-            break
-        else
-            local isLicenseValid = false
-            print("Invalid License")
-        end
-    end
-end
-
 function GonWebhook(ZufarStore)
     wh = Webhook.new(webhookCID)
     wh.username = "Zufar Store"
