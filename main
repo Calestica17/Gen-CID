@@ -1,0 +1,110 @@
+local url = "https://raw.githubusercontent.com/Calestica17/Gen-CID/main/License"
+
+local curlCommand = "curl -s " .. url
+local handle = io.popen(curlCommand)
+local response = handle:read("*a")
+handle:close()
+
+if not response or response == "" then
+    print("Somthing Wrong Here")
+else
+    local isLicenseValid = false
+    for match in response:gmatch("%S+") do
+        if match == getUsername() then
+            isLicenseValid = true
+            print("Work")
+            break
+        else
+            local isLicenseValid = false
+            print("Invalid License")
+        end
+    end
+end
+
+function GonWebhook(ZufarStore)
+    wh = Webhook.new(webhookCID)
+    wh.username = "Zufar Store"
+    wh.avatar_url = "https://cdn.discordapp.com/attachments/1206152488818839562/1207569741099704332/Zufar_Store.png?ex=65e95a75&is=65d6e575&hm=5afc8de530f5a8b30a3ba41660cf7bf7071070a6bbd5def2cfe2d674fda28120&"
+    wh.embed1.use = true
+    wh.embed1.title = "Generated CID"
+    wh.embed1.description = ZufarStore .. "\nScript By <a:ZufarArrow:1206150362759958558> <@1089862323105177600> <a:ZufarVerified:1206150773667397703>"
+    
+    local response = wh:send() -- Send the webhook and get the response
+end
+
+if Owner == "Zufar" and DiscordID == "zufar17" and DiscordServer == "https://discord.gg/vmKjg7qbz7" and isLicenseValid then
+
+    function generateRandomString(length)
+        local characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        local randomString = StartWith
+        for i = 4, length do
+            local randomIndex = math.random(#characters)
+            randomString = randomString .. string.sub(characters, randomIndex, randomIndex)
+        end
+        return randomString
+    end
+
+    -- LIST GROWID BOT
+    listGrowID = {}
+
+    for i = 1, #Multi_MacRid do
+        listGrowID[i] = generateRandomString(NameLetter) -- Generate a random string for each MacRid
+    end
+
+
+    function checkOnline()
+        while bot.status ~= 1 do
+            bot:connect()
+			sleep(3000)
+        end
+    end
+
+    function checkAAP()
+        while bot.status ~= 6 do
+            bot:connect()
+            sleep(3000)
+        end
+    end
+
+    function LogText(text) 
+        file = io.open(LogsFile, "a") 
+        file:write(text .. "\n")
+        file:close() 
+    end
+
+    for index, bots in pairs(listGrowID) do
+        mac, rid = Multi_MacRid[index]:match("([^|]+)|([^|]+)")
+        NewBot = generateRandomString(NameLetter)
+        addBot(NewBot)
+        bot = getBot(NewBot)
+        bot:setMac(mac)
+        bot:setRid(rid)
+        bot:updateBot(bots, mac, rid)
+        bot.auto_reconnect = true
+        bot.auto_tutorial = false
+        sleep(5000)
+        checkOnline()
+        Email, EmailPass = Multi_EmailAddress[index]:match("([^|]+):([^|]+)")
+        if RandomPassword then
+            Password = generateRandomString(10)
+        else
+            Password = Custom_Password
+        end
+        bot:sendPacket(2, "action|growid")
+        sleep(1000)
+        bot:sendPacket(2, "action|dialog_return\ndialog_name|growid_apply\nlogon|" .. bots .. "\npassword|" .. Password .. "\npassword_verify|" .. Password .. "\nemail|" .. Email)
+        sleep(5000)
+        bot:sendPacket(2, "action|growid")
+        sleep(1000)
+        bot:sendPacket(2, "action|dialog_return\ndialog_name|growid_apply\nlogon|" .. bots .. "\npassword|" .. Password .. "\npassword_verify|" .. Password .. "\nemail|" .. Email)
+        sleep(15000)
+        bot:connect()
+        bot.auto_reconnect = false
+        checkAAP()
+        sleep(1000)
+        if bot.status == BotStatus.advanced_account_protection then
+            GonWebhook("**<a:plash:1146855891681951917> CONVERT GUEST TO CID <a:plash:1146855891681951917>\n\n<:growbot:992058196439072770> Bot Name : " .. bots .. "\n<a:arrow:1146856274408001697> Password : " .. Password .. "\n<a:arrow:1146856274408001697> Email : " .. Email .. "\n<a:arrow:1146856274408001697> Email Password : " .. EmailPass .. "\n<a:loding:1146855858874089573> Status : Success Send AAP <a:alerts:1149773640024461372>")
+            LogText(bots .. "|" .. Password .. "|" .. Email .. "|" .. EmailPass)
+        end
+    end
+end
