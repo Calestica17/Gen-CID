@@ -1,3 +1,58 @@
+-- [[ AUTHOR PAGE ]]
+Owner = "Zufar" -- Don't Remove
+DiscordID = "zufar17" -- Don't Remove
+DiscordServer = "https://discord.gg/vmKjg7qbz7" -- Don't Remove
+
+-- [[ SETTING PAGE]]
+NameLetter = 6
+StartWith = "EMZ"
+webhookCID = ""
+LogsFile = "STOCKCID.txt"
+
+-- [[ PASSWORD PAGE ]]
+RandomPassword = false
+PasswordLetter = 0
+Custom_Password = "emzstore1."
+
+-- [[ CONFIG PAGE]]
+Multi_MacRid = { 
+    "",
+    "",
+    "",
+    "",
+    ""    
+}
+Multi_EmailAddress = { 
+    "",
+    "",
+    "",
+    "",
+    ""    
+}
+
+local url = "https://raw.githubusercontent.com/Calestica17/Gen-CID/main/License"
+
+local curlCommand = "curl -s " .. url
+local handle = io.popen(curlCommand)
+local response = handle:read("*a")
+handle:close()
+
+if not response or response == "" then
+    print("Somthing Wrong Here")
+else
+    local isLicenseValid = false
+    for match in response:gmatch("%S+") do
+        if match == getUsername() then
+            isLicenseValid = true
+            print("Work")
+            break
+        else
+            local isLicenseValid = false
+            print("Invalid License")
+        end
+    end
+end
+
 function GonWebhook(ZufarStore)
     wh = Webhook.new(webhookCID)
     wh.username = "Zufar Store"
@@ -12,9 +67,9 @@ end
 if Owner == "Zufar" and DiscordID == "zufar17" and DiscordServer == "https://discord.gg/vmKjg7qbz7" and isLicenseValid then
 
     function generateRandomString(length)
-        local characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        local randomString = StartWith
-        for i = 4, length do
+        local characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        local randomString = ""
+        for i = 1, length do
             local randomIndex = math.random(#characters)
             randomString = randomString .. string.sub(characters, randomIndex, randomIndex)
         end
